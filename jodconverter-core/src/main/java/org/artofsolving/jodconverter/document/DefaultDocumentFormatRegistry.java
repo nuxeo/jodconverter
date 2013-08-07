@@ -71,6 +71,7 @@ public class DefaultDocumentFormatRegistry extends SimpleDocumentFormatRegistry 
 
 		DocumentFormat docx = new DocumentFormat("Microsoft Word 2007 XML", "docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
 		docx.setInputFamily(DocumentFamily.TEXT);
+        docx.setStoreProperties(DocumentFamily.TEXT, Collections.singletonMap("FilterName", "MS Word 2007 XML"));
         addFormat(docx);
 
 		DocumentFormat rtf = new DocumentFormat("Rich Text Format", "rtf", "text/rtf");
