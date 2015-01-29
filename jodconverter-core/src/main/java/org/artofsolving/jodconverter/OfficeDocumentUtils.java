@@ -12,22 +12,23 @@
 //
 package org.artofsolving.jodconverter;
 
-import static org.artofsolving.jodconverter.office.OfficeUtils.*;
+import static org.artofsolving.jodconverter.office.OfficeUtils.cast;
 
 import org.artofsolving.jodconverter.document.DocumentFamily;
 import org.artofsolving.jodconverter.office.OfficeException;
 
-
 import com.sun.star.lang.XComponent;
 import com.sun.star.lang.XServiceInfo;
 
-class OfficeDocumentUtils {
-
-    private OfficeDocumentUtils() {
+class OfficeDocumentUtils
+{
+    private OfficeDocumentUtils()
+    {
         throw new AssertionError("utility class must not be instantiated");
     }
 
-    public static DocumentFamily getDocumentFamily(XComponent document) throws OfficeException {
+    public static DocumentFamily getDocumentFamily(XComponent document) throws OfficeException
+    {
         XServiceInfo serviceInfo = cast(XServiceInfo.class, document);
         if (serviceInfo.supportsService("com.sun.star.text.GenericTextDocument")) {
             // NOTE: a GenericTextDocument is either a TextDocument, a WebDocument, or a GlobalDocument
@@ -43,5 +44,4 @@ class OfficeDocumentUtils {
             throw new OfficeException("document of unknown family: " + serviceInfo.getImplementationName());
         }
     }
-
 }

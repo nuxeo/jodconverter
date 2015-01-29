@@ -12,12 +12,12 @@
 //
 package org.artofsolving.jodconverter.office;
 
-class RetryTimeoutException extends Exception {
-
+class RetryTimeoutException extends Exception
+{
     private static final long serialVersionUID = -3704437769955257514L;
 
-    public RetryTimeoutException(Throwable cause) {
+    public RetryTimeoutException(Throwable cause)
+    {
         super(cause);
     }
-
 }

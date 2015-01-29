@@ -12,32 +12,38 @@
 //
 package org.artofsolving.jodconverter.office;
 
-class PooledOfficeManagerSettings extends ManagedOfficeProcessSettings {
-
+class PooledOfficeManagerSettings extends ManagedOfficeProcessSettings
+{
     public static final long DEFAULT_TASK_EXECUTION_TIMEOUT = 120000L;
+
     public static final int DEFAULT_MAX_TASKS_PER_PROCESS = 200;
 
     private long taskExecutionTimeout = DEFAULT_TASK_EXECUTION_TIMEOUT;
+
     private int maxTasksPerProcess = DEFAULT_MAX_TASKS_PER_PROCESS;
 
-    public PooledOfficeManagerSettings(UnoUrl unoUrl) {
+    public PooledOfficeManagerSettings(UnoUrl unoUrl)
+    {
         super(unoUrl);
     }
 
-    public long getTaskExecutionTimeout() {
-        return taskExecutionTimeout;
+    public long getTaskExecutionTimeout()
+    {
+        return this.taskExecutionTimeout;
     }
 
-    public void setTaskExecutionTimeout(long taskExecutionTimeout) {
+    public void setTaskExecutionTimeout(long taskExecutionTimeout)
+    {
         this.taskExecutionTimeout = taskExecutionTimeout;
     }
 
-    public int getMaxTasksPerProcess() {
-        return maxTasksPerProcess;
+    public int getMaxTasksPerProcess()
+    {
+        return this.maxTasksPerProcess;
     }
 
-    public void setMaxTasksPerProcess(int maxTasksPerProcess) {
+    public void setMaxTasksPerProcess(int maxTasksPerProcess)
+    {
         this.maxTasksPerProcess = maxTasksPerProcess;
     }
-
 }

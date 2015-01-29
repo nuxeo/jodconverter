@@ -17,12 +17,12 @@ import static org.testng.Assert.assertEquals;
 
 import java.io.File;
 
-public class OfficeUtilsTest {
-
-    public void testToUrl() {
-        //TODO create separate tests for Windows
+public class OfficeUtilsTest
+{
+    public void testToUrl()
+    {
+        // TODO create separate tests for Windows
         assertEquals(toUrl(new File("/tmp/document.odt")), "file:///tmp/document.odt");
         assertEquals(toUrl(new File("/tmp/document with spaces.odt")), "file:///tmp/document%20with%20spaces.odt");
     }
-
 }

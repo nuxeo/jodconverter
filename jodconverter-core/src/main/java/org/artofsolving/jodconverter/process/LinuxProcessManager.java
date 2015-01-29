@@ -20,28 +20,29 @@ import java.util.regex.Pattern;
 import org.apache.commons.io.IOUtils;
 
 /**
- * {@link ProcessManager} implementation for Linux. Uses the <tt>ps</tt>
- * and <tt>kill</tt> commands.
+ * {@link ProcessManager} implementation for Linux. Uses the <tt>ps</tt> and <tt>kill</tt> commands.
  * <p>
- * Should Work on Solaris too, except that the command line string
- * returned by <tt>ps</tt> there is limited to 80 characters and this affects
- * {@link #findPid(String)}.
+ * Should Work on Solaris too, except that the command line string returned by <tt>ps</tt> there is limited to 80
+ * characters and this affects {@link #findPid(String)}.
  */
-public class LinuxProcessManager implements ProcessManager {
-
-    private static final Pattern PS_OUTPUT_LINE = Pattern.compile("^\\s*(\\d+)\\s+(.*)$"); 
+public class LinuxProcessManager implements ProcessManager
+{
+    private static final Pattern PS_OUTPUT_LINE = Pattern.compile("^\\s*(\\d+)\\s+(.*)$");
 
     private String[] runAsArgs;
 
-    public void setRunAsArgs(String... runAsArgs) {
-		this.runAsArgs = runAsArgs;
-	}
-
-    protected String[] psCommand() {
-        return new String[] { "/bin/ps", "-e", "-o", "pid,args" };
+    public void setRunAsArgs(String... runAsArgs)
+    {
+        this.runAsArgs = runAsArgs;
     }
 
-    public long findPid(ProcessQuery query) throws IOException {
+    protected String[] psCommand()
+    {
+        return new String[] {"/bin/ps", "-e", "-o", "pid,args"};
+    }
+
+    public long findPid(ProcessQuery query) throws IOException
+    {
         String regex = Pattern.quote(query.getCommand()) + ".*" + Pattern.quote(query.getArgument());
         Pattern commandPattern = Pattern.compile(regex);
         for (String line : execute(psCommand())) {
@@ -57,26 +58,27 @@ public class LinuxProcessManager implements ProcessManager {
         return PID_NOT_FOUND;
     }
 
-    public void kill(Process process, long pid) throws IOException {
-    	if (pid <= 0) {
-    		throw new IllegalArgumentException("invalid pid: " + pid);
-    	}
+    public void kill(Process process, long pid) throws IOException
+    {
+        if (pid <= 0) {
+            throw new IllegalArgumentException("invalid pid: " + pid);
+        }
         execute("/bin/kill", "-KILL", Long.toString(pid));
     }
 
-    private List<String> execute(String... args) throws IOException {
-    	String[] command;
-    	if (runAsArgs != null) {
-    		command = new String[runAsArgs.length + args.length];
-    		System.arraycopy(runAsArgs, 0, command, 0, runAsArgs.length);
-    		System.arraycopy(args, 0, command, runAsArgs.length, args.length);
-    	} else {
-    		command = args;
-    	}
+    private List<String> execute(String... args) throws IOException
+    {
+        String[] command;
+        if (this.runAsArgs != null) {
+            command = new String[this.runAsArgs.length + args.length];
+            System.arraycopy(this.runAsArgs, 0, command, 0, this.runAsArgs.length);
+            System.arraycopy(args, 0, command, this.runAsArgs.length, args.length);
+        } else {
+            command = args;
+        }
         Process process = new ProcessBuilder(command).start();
         @SuppressWarnings("unchecked")
         List<String> lines = IOUtils.readLines(process.getInputStream());
         return lines;
     }
-
 }

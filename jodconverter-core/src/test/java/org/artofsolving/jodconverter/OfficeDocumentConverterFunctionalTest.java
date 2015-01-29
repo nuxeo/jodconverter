@@ -23,27 +23,30 @@ import java.util.Set;
 import org.apache.commons.io.FilenameUtils;
 import org.artofsolving.jodconverter.document.DocumentFormat;
 import org.artofsolving.jodconverter.document.DocumentFormatRegistry;
-import org.artofsolving.jodconverter.office.OfficeManager;
 import org.artofsolving.jodconverter.office.DefaultOfficeManagerConfiguration;
+import org.artofsolving.jodconverter.office.OfficeManager;
 import org.testng.annotations.Test;
 
-@Test(groups="functional")
-public class OfficeDocumentConverterFunctionalTest {
-
-    public void runAllPossibleConversions() throws IOException {
+@Test(groups = "functional")
+public class OfficeDocumentConverterFunctionalTest
+{
+    public void runAllPossibleConversions() throws IOException
+    {
         OfficeManager officeManager = new DefaultOfficeManagerConfiguration().buildOfficeManager();
         OfficeDocumentConverter converter = new OfficeDocumentConverter(officeManager);
         DocumentFormatRegistry formatRegistry = converter.getFormatRegistry();
-        
+
         officeManager.start();
         try {
             File dir = new File("src/test/resources/documents");
-            File[] files = dir.listFiles(new FilenameFilter() {
-            	public boolean accept(File dir, String name) {
-            		return !name.startsWith(".");
-            	}
+            File[] files = dir.listFiles(new FilenameFilter()
+            {
+                public boolean accept(File dir, String name)
+                {
+                    return !name.startsWith(".");
+                }
             });
-			for (File inputFile : files) {
+            for (File inputFile : files) {
                 String inputExtension = FilenameUtils.getExtension(inputFile.getName());
                 DocumentFormat inputFormat = formatRegistry.getFormatByExtension(inputExtension);
                 assertNotNull(inputFormat, "unknown input format: " + inputExtension);
@@ -51,16 +54,16 @@ public class OfficeDocumentConverterFunctionalTest {
                 for (DocumentFormat outputFormat : outputFormats) {
                     File outputFile = File.createTempFile("test", "." + outputFormat.getExtension());
                     outputFile.deleteOnExit();
-                    System.out.printf("-- converting %s to %s... ", inputFormat.getExtension(), outputFormat.getExtension());
+                    System.out.printf("-- converting %s to %s... ", inputFormat.getExtension(), outputFormat
+                        .getExtension());
                     converter.convert(inputFile, outputFile, outputFormat);
                     System.out.printf("done.\n");
                     assertTrue(outputFile.isFile() && outputFile.length() > 0);
-                    //TODO use file detection to make sure outputFile is in the expected format
+                    // TODO use file detection to make sure outputFile is in the expected format
                 }
             }
         } finally {
             officeManager.stop();
         }
     }
-
 }

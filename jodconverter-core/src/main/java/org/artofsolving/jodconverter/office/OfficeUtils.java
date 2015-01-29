@@ -20,19 +20,22 @@ import org.artofsolving.jodconverter.util.PlatformUtils;
 import com.sun.star.beans.PropertyValue;
 import com.sun.star.uno.UnoRuntime;
 
-public class OfficeUtils {
-
+public class OfficeUtils
+{
     public static final String SERVICE_DESKTOP = "com.sun.star.frame.Desktop";
 
-    private OfficeUtils() {
+    private OfficeUtils()
+    {
         throw new AssertionError("utility class must not be instantiated");
     }
 
-    public static <T> T cast(Class<T> type, Object object) {
-        return (T) UnoRuntime.queryInterface(type, object);
+    public static <T> T cast(Class<T> type, Object object)
+    {
+        return UnoRuntime.queryInterface(type, object);
     }
 
-    public static PropertyValue property(String name, Object value) {
+    public static PropertyValue property(String name, Object value)
+    {
         PropertyValue propertyValue = new PropertyValue();
         propertyValue.Name = name;
         propertyValue.Value = value;
@@ -40,27 +43,30 @@ public class OfficeUtils {
     }
 
     @SuppressWarnings("unchecked")
-    public static PropertyValue[] toUnoProperties(Map<String,?> properties) {
+    public static PropertyValue[] toUnoProperties(Map<String, ? > properties)
+    {
         PropertyValue[] propertyValues = new PropertyValue[properties.size()];
         int i = 0;
-        for (Map.Entry<String,?> entry : properties.entrySet()) {
+        for (Map.Entry<String, ? > entry : properties.entrySet()) {
             Object value = entry.getValue();
             if (value instanceof Map) {
-                Map<String,Object> subProperties = (Map<String,Object>) value;
+                Map<String, Object> subProperties = (Map<String, Object>) value;
                 value = toUnoProperties(subProperties);
             }
-            propertyValues[i++] = property((String) entry.getKey(), value);
+            propertyValues[i++] = property(entry.getKey(), value);
         }
         return propertyValues;
     }
 
-    public static String toUrl(File file) {
+    public static String toUrl(File file)
+    {
         String path = file.toURI().getRawPath();
         String url = path.startsWith("//") ? "file:" + path : "file://" + path;
         return url.endsWith("/") ? url.substring(0, url.length() - 1) : url;
     }
 
-    public static File getDefaultOfficeHome() {
+    public static File getDefaultOfficeHome()
+    {
         if (System.getProperty("office.home") != null) {
             return new File(System.getProperty("office.home"));
         }
@@ -72,25 +78,23 @@ public class OfficeUtils {
             }
             return findOfficeHome(
                 programFiles + File.separator + "OpenOffice.org 3",
-                programFiles + File.separator + "LibreOffice 3"
-            );
+                programFiles + File.separator + "LibreOffice 3");
         } else if (PlatformUtils.isMac()) {
             return findOfficeHome(
                 "/Applications/OpenOffice.org.app/Contents",
-                "/Applications/LibreOffice.app/Contents"
-            );
+                "/Applications/LibreOffice.app/Contents");
         } else {
             // Linux or other *nix variants
             return findOfficeHome(
                 "/opt/openoffice.org3",
                 "/opt/libreoffice",
                 "/usr/lib/openoffice",
-                "/usr/lib/libreoffice"
-            );
+                "/usr/lib/libreoffice");
         }
     }
 
-    private static File findOfficeHome(String... knownPaths) {
+    private static File findOfficeHome(String... knownPaths)
+    {
         for (String path : knownPaths) {
             File home = new File(path);
             if (getOfficeExecutable(home).isFile()) {
@@ -100,12 +104,20 @@ public class OfficeUtils {
         return null;
     }
 
-    public static File getOfficeExecutable(File officeHome) {
+    public static File getOfficeExecutable(File officeHome)
+    {
         if (PlatformUtils.isMac()) {
-            return new File(officeHome, "MacOS/soffice.bin");
+            // Starting with LibreOffice 4.1 the location of the executable has changed on Mac. It's now in
+            // program/soffice. Handle both cases!
+            File executableFile = new File(officeHome, "MacOS/soffice.bin");
+            if (!executableFile.isFile()) {
+                executableFile = new File(officeHome, "program/soffice");
+            }
+            return executableFile;
+        } else if (PlatformUtils.isWindows()) {
+            return new File(officeHome, "program/soffice.exe");
         } else {
             return new File(officeHome, "program/soffice.bin");
         }
     }
-
 }

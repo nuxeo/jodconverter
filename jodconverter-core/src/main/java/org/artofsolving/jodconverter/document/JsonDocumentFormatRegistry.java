@@ -22,17 +22,20 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class JsonDocumentFormatRegistry extends SimpleDocumentFormatRegistry {
-
-    public JsonDocumentFormatRegistry(InputStream input) throws JSONException, IOException {
+public class JsonDocumentFormatRegistry extends SimpleDocumentFormatRegistry
+{
+    public JsonDocumentFormatRegistry(InputStream input) throws JSONException, IOException
+    {
         readJsonArray(IOUtils.toString(input));
     }
 
-    public JsonDocumentFormatRegistry(String source) throws JSONException {
+    public JsonDocumentFormatRegistry(String source) throws JSONException
+    {
         readJsonArray(source);
     }
 
-    private void readJsonArray(String source) throws JSONException {
+    private void readJsonArray(String source) throws JSONException
+    {
         JSONArray array = new JSONArray(source);
         for (int i = 0; i < array.length(); i++) {
             JSONObject jsonFormat = array.getJSONObject(i);
@@ -49,7 +52,7 @@ public class JsonDocumentFormatRegistry extends SimpleDocumentFormatRegistry {
             if (jsonFormat.has("storePropertiesByFamily")) {
                 JSONObject jsonStorePropertiesByFamily = jsonFormat.getJSONObject("storePropertiesByFamily");
                 for (String key : JSONObject.getNames(jsonStorePropertiesByFamily)) {
-                    Map<String,?> storeProperties = toJavaMap(jsonStorePropertiesByFamily.getJSONObject(key));
+                    Map<String, ? > storeProperties = toJavaMap(jsonStorePropertiesByFamily.getJSONObject(key));
                     format.setStoreProperties(DocumentFamily.valueOf(key), storeProperties);
                 }
             }
@@ -57,8 +60,9 @@ public class JsonDocumentFormatRegistry extends SimpleDocumentFormatRegistry {
         }
     }
 
-    private Map<String,?> toJavaMap(JSONObject jsonMap) throws JSONException {
-        Map<String,Object> map = new HashMap<String,Object>();
+    private Map<String, ? > toJavaMap(JSONObject jsonMap) throws JSONException
+    {
+        Map<String, Object> map = new HashMap<String, Object>();
         for (String key : JSONObject.getNames(jsonMap)) {
             Object value = jsonMap.get(key);
             if (value instanceof JSONObject) {
@@ -69,5 +73,4 @@ public class JsonDocumentFormatRegistry extends SimpleDocumentFormatRegistry {
         }
         return map;
     }
-
 }

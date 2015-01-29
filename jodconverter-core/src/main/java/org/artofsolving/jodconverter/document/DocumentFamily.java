@@ -12,8 +12,7 @@
 //
 package org.artofsolving.jodconverter.document;
 
-public enum DocumentFamily {
-
+public enum DocumentFamily
+{
     TEXT, SPREADSHEET, PRESENTATION, DRAWING
-
 }

@@ -17,49 +17,52 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class SimpleDocumentFormatRegistry implements DocumentFormatRegistry {
+public class SimpleDocumentFormatRegistry implements DocumentFormatRegistry
+{
+    private List<DocumentFormat> documentFormats = new ArrayList<DocumentFormat>();
 
-	private List<DocumentFormat> documentFormats = new ArrayList<DocumentFormat>();
+    public void addFormat(DocumentFormat documentFormat)
+    {
+        this.documentFormats.add(documentFormat);
+    }
 
-	public void addFormat(DocumentFormat documentFormat) {
-		documentFormats.add(documentFormat);
-	}
-
-	public DocumentFormat getFormatByExtension(String extension) {
+    public DocumentFormat getFormatByExtension(String extension)
+    {
         if (extension == null) {
             return null;
         }
         String lowerExtension = extension.toLowerCase();
-        //TODO keep a documentByExtension map instead
-		for (DocumentFormat format : documentFormats) {
-			if (format.getExtension().equals(lowerExtension)) {
-				return format;
-			}
-		}
-		return null;
-	}
+        // TODO keep a documentByExtension map instead
+        for (DocumentFormat format : this.documentFormats) {
+            if (format.getExtension().equals(lowerExtension)) {
+                return format;
+            }
+        }
+        return null;
+    }
 
-	public DocumentFormat getFormatByMediaType(String mediaType) {
+    public DocumentFormat getFormatByMediaType(String mediaType)
+    {
         if (mediaType == null) {
             return null;
         }
-        //TODO keep a documentByMediaType map instead
-        for (DocumentFormat format : documentFormats) {
+        // TODO keep a documentByMediaType map instead
+        for (DocumentFormat format : this.documentFormats) {
             if (format.getMediaType().equals(mediaType)) {
                 return format;
             }
         }
-	    return null;
-	}
+        return null;
+    }
 
-	public Set<DocumentFormat> getOutputFormats(DocumentFamily family) {
-	    Set<DocumentFormat> formats = new HashSet<DocumentFormat>();
-        for (DocumentFormat format : documentFormats) {
+    public Set<DocumentFormat> getOutputFormats(DocumentFamily family)
+    {
+        Set<DocumentFormat> formats = new HashSet<DocumentFormat>();
+        for (DocumentFormat format : this.documentFormats) {
             if (format.getStoreProperties(family) != null) {
                 formats.add(format);
             }
         }
-	    return formats;
-	}
-
+        return formats;
+    }
 }

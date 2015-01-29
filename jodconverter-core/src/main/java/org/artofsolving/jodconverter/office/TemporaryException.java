@@ -13,15 +13,15 @@
 package org.artofsolving.jodconverter.office;
 
 /**
- * Represents an error condition that can be temporary, i.e. that could go
- * away by simply retrying the same operation after an interval.  
+ * Represents an error condition that can be temporary, i.e. that could go away by simply retrying the same operation
+ * after an interval.
  */
-class TemporaryException extends Exception {
-
+class TemporaryException extends Exception
+{
     private static final long serialVersionUID = 7237380113208327295L;
 
-    public TemporaryException(Throwable cause) {
+    public TemporaryException(Throwable cause)
+    {
         super(cause);
     }
-
 }

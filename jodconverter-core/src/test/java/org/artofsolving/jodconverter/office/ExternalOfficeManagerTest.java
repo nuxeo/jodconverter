@@ -20,10 +20,11 @@ import org.artofsolving.jodconverter.ReflectionUtils;
 import org.artofsolving.jodconverter.process.PureJavaProcessManager;
 import org.testng.annotations.Test;
 
-@Test(groups="integration")
-public class ExternalOfficeManagerTest {
-
-    public void executeTask() throws Exception {
+@Test(groups = "integration")
+public class ExternalOfficeManagerTest
+{
+    public void executeTask() throws Exception
+    {
         UnoUrl unoUrl = UnoUrl.socket(2002);
         OfficeProcess officeProcess = new OfficeProcess(OfficeUtils.getDefaultOfficeHome(), unoUrl,
             null, null, new File(System.getProperty("java.io.tmpdir")), new PureJavaProcessManager());
@@ -34,20 +35,19 @@ public class ExternalOfficeManagerTest {
             officeProcess.start(true);
             Thread.sleep(2000);
         }
-        
+
         ExternalOfficeManager manager = new ExternalOfficeManager(unoUrl, true);
         manager.start();
-        
+
         MockOfficeTask task = new MockOfficeTask();
         manager.execute(task);
         assertTrue(task.isCompleted());
-        
+
         manager.stop();
-        //TODO replace when OfficeProcess has a forciblyTerminate()
+        // TODO replace when OfficeProcess has a forciblyTerminate()
         Process process = (Process) ReflectionUtils.getPrivateField(officeProcess, "process");
         process.destroy();
     }
 
-    //TODO test auto-reconnection
-
+    // TODO test auto-reconnection
 }

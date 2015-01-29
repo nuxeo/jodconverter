@@ -15,11 +15,10 @@ package org.artofsolving.jodconverter.office;
 /**
  * An OfficeManager knows how to execute {@link OfficeTask}s.
  * <p>
- * An OfficeManager implementation will typically manage one or more
- * {@link OfficeConnection}s.
+ * An OfficeManager implementation will typically manage one or more {@link OfficeConnection}s.
  */
-public interface OfficeManager {
-
+public interface OfficeManager
+{
     void execute(OfficeTask task) throws OfficeException;
 
     void start() throws OfficeException;

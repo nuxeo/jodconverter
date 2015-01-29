@@ -12,4 +12,7 @@
 //
 package org.artofsolving.jodconverter.office;
 
-public enum OfficeConnectionProtocol { PIPE, SOCKET }
+public enum OfficeConnectionProtocol
+{
+    PIPE, SOCKET
+}

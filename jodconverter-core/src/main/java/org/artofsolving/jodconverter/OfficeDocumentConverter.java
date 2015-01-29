@@ -25,51 +25,58 @@ import org.artofsolving.jodconverter.office.OfficeManager;
 
 import com.sun.star.document.UpdateDocMode;
 
-public class OfficeDocumentConverter {
-
+public class OfficeDocumentConverter
+{
     private final OfficeManager officeManager;
+
     private final DocumentFormatRegistry formatRegistry;
 
-    private Map<String,?> defaultLoadProperties = createDefaultLoadProperties();
+    private Map<String, ? > defaultLoadProperties = createDefaultLoadProperties();
 
-    public OfficeDocumentConverter(OfficeManager officeManager) {
+    public OfficeDocumentConverter(OfficeManager officeManager)
+    {
         this(officeManager, new DefaultDocumentFormatRegistry());
     }
 
-    public OfficeDocumentConverter(OfficeManager officeManager, DocumentFormatRegistry formatRegistry) {
+    public OfficeDocumentConverter(OfficeManager officeManager, DocumentFormatRegistry formatRegistry)
+    {
         this.officeManager = officeManager;
         this.formatRegistry = formatRegistry;
     }
 
-    private Map<String,Object> createDefaultLoadProperties() {
-        Map<String,Object> loadProperties = new HashMap<String,Object>();
+    private Map<String, Object> createDefaultLoadProperties()
+    {
+        Map<String, Object> loadProperties = new HashMap<String, Object>();
         loadProperties.put("Hidden", true);
         loadProperties.put("ReadOnly", true);
         loadProperties.put("UpdateDocMode", UpdateDocMode.QUIET_UPDATE);
         return loadProperties;
     }
 
-    public void setDefaultLoadProperties(Map<String, ?> defaultLoadProperties) {
+    public void setDefaultLoadProperties(Map<String, ? > defaultLoadProperties)
+    {
         this.defaultLoadProperties = defaultLoadProperties;
     }
 
-    public DocumentFormatRegistry getFormatRegistry() {
-        return formatRegistry;
+    public DocumentFormatRegistry getFormatRegistry()
+    {
+        return this.formatRegistry;
     }
 
-    public void convert(File inputFile, File outputFile) throws OfficeException {
+    public void convert(File inputFile, File outputFile) throws OfficeException
+    {
         String outputExtension = FilenameUtils.getExtension(outputFile.getName());
-        DocumentFormat outputFormat = formatRegistry.getFormatByExtension(outputExtension);
+        DocumentFormat outputFormat = this.formatRegistry.getFormatByExtension(outputExtension);
         convert(inputFile, outputFile, outputFormat);
     }
 
-    public void convert(File inputFile, File outputFile, DocumentFormat outputFormat) throws OfficeException {
+    public void convert(File inputFile, File outputFile, DocumentFormat outputFormat) throws OfficeException
+    {
         String inputExtension = FilenameUtils.getExtension(inputFile.getName());
-        DocumentFormat inputFormat = formatRegistry.getFormatByExtension(inputExtension);
+        DocumentFormat inputFormat = this.formatRegistry.getFormatByExtension(inputExtension);
         StandardConversionTask conversionTask = new StandardConversionTask(inputFile, outputFile, outputFormat);
-        conversionTask.setDefaultLoadProperties(defaultLoadProperties);
+        conversionTask.setDefaultLoadProperties(this.defaultLoadProperties);
         conversionTask.setInputFormat(inputFormat);
-        officeManager.execute(conversionTask);
+        this.officeManager.execute(conversionTask);
     }
-
 }

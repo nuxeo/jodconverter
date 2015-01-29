@@ -12,8 +12,7 @@
 //
 package org.artofsolving.jodconverter.office;
 
-public interface OfficeContext {
-
+public interface OfficeContext
+{
     Object getService(String serviceName);
-
 }

@@ -1,3 +1,8 @@
+XWiki
+=====
+
+The XWiki project is forking this project because it seems dead and we need to bring some fixes to it. We hope that someone from the JODConverter project will be able to apply our fixes at some point.
+
 JODConverter
 ============
 

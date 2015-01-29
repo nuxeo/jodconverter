@@ -12,24 +12,20 @@
 //
 package org.artofsolving.jodconverter.document;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertNotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.commons.io.IOUtils;
-import org.artofsolving.jodconverter.document.DocumentFamily;
-import org.artofsolving.jodconverter.document.DocumentFormat;
-import org.artofsolving.jodconverter.document.DocumentFormatRegistry;
-import org.artofsolving.jodconverter.document.JsonDocumentFormatRegistry;
-
 import org.json.JSONException;
 import org.testng.annotations.Test;
 
 @Test
-public class JsonDocumentFormatRegistryTest {
-
-    public void readJsonRegistry() throws JSONException, IOException {
+public class JsonDocumentFormatRegistryTest
+{
+    public void readJsonRegistry() throws JSONException, IOException
+    {
         InputStream input = getClass().getResourceAsStream("/document-formats.js");
         DocumentFormatRegistry registry = null;
         try {
@@ -41,5 +37,4 @@ public class JsonDocumentFormatRegistryTest {
         assertNotNull(odt);
         assertNotNull(odt.getStoreProperties(DocumentFamily.TEXT));
     }
-
 }

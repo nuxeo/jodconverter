@@ -12,19 +12,21 @@
 //
 package org.artofsolving.jodconverter.office;
 
-abstract class Retryable {
-
+abstract class Retryable
+{
     /**
      * @throws TemporaryException for an error condition that can be temporary - i.e. retrying later could be successful
      * @throws Exception for all other error conditions
      */
     protected abstract void attempt() throws TemporaryException, Exception;
 
-    public void execute(long interval, long timeout) throws RetryTimeoutException, Exception {
+    public void execute(long interval, long timeout) throws RetryTimeoutException, Exception
+    {
         execute(0L, interval, timeout);
     }
 
-    public void execute(long delay, long interval, long timeout) throws RetryTimeoutException, Exception {
+    public void execute(long delay, long interval, long timeout) throws RetryTimeoutException, Exception
+    {
         long start = System.currentTimeMillis();
         if (delay > 0L) {
             sleep(delay);
@@ -44,12 +46,12 @@ abstract class Retryable {
         }
     }
 
-    private void sleep(long millis) {
+    private void sleep(long millis)
+    {
         try {
             Thread.sleep(millis);
         } catch (InterruptedException interruptedException) {
             // continue
         }
     }
-
 }

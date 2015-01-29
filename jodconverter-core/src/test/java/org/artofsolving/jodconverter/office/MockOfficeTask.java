@@ -12,49 +12,50 @@
 //
 package org.artofsolving.jodconverter.office;
 
-import static org.artofsolving.jodconverter.office.OfficeUtils.*;
-
-import org.artofsolving.jodconverter.office.OfficeContext;
-import org.artofsolving.jodconverter.office.OfficeException;
-import org.artofsolving.jodconverter.office.OfficeTask;
+import static org.artofsolving.jodconverter.office.OfficeUtils.SERVICE_DESKTOP;
+import static org.artofsolving.jodconverter.office.OfficeUtils.cast;
+import static org.artofsolving.jodconverter.office.OfficeUtils.property;
 
 import com.sun.star.beans.PropertyValue;
 import com.sun.star.frame.XComponentLoader;
 import com.sun.star.lang.XComponent;
 import com.sun.star.util.XCloseable;
 
-public class MockOfficeTask implements OfficeTask {
-
+public class MockOfficeTask implements OfficeTask
+{
     private long delayTime = 0L;
 
     private boolean completed = false;
 
-    public MockOfficeTask() {
+    public MockOfficeTask()
+    {
         // default
     }
 
-    public MockOfficeTask(long delayTime) {
+    public MockOfficeTask(long delayTime)
+    {
         this.delayTime = delayTime;
     }
 
-    public void execute(OfficeContext context) throws OfficeException {
+    public void execute(OfficeContext context) throws OfficeException
+    {
         XComponentLoader loader = cast(XComponentLoader.class, context.getService(SERVICE_DESKTOP));
         assert loader != null : "desktop object is null";
         try {
-            PropertyValue[] arguments = new PropertyValue[] { property("Hidden", true) };
+            PropertyValue[] arguments = new PropertyValue[] {property("Hidden", true)};
             XComponent document = loader.loadComponentFromURL("private:factory/swriter", "_blank", 0, arguments);
-            if (delayTime > 0) {
-                Thread.sleep(delayTime);
+            if (this.delayTime > 0) {
+                Thread.sleep(this.delayTime);
             }
             cast(XCloseable.class, document).close(true);
-            completed = true;
+            this.completed = true;
         } catch (Exception exception) {
             throw new OfficeException("failed to create document", exception);
         }
     }
 
-    public boolean isCompleted() {
-        return completed;
+    public boolean isCompleted()
+    {
+        return this.completed;
     }
-
 }
