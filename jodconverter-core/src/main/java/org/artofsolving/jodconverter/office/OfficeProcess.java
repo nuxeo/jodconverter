@@ -19,11 +19,7 @@
 //
 package org.artofsolving.jodconverter.office;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +43,8 @@ class OfficeProcess {
     private final File fakeBundlesDir;
 
     private final ProcessManager processManager;
+    
+    private final boolean killExistingProcess;
 
     private Process process;
 
@@ -66,12 +64,12 @@ class OfficeProcess {
 
     public OfficeProcess(File officeHome, UnoUrl unoUrl,
             File templateProfileDir, ProcessManager processManager) {
-        this(officeHome, unoUrl, templateProfileDir, processManager, false);
+        this(officeHome, unoUrl, templateProfileDir, processManager, false, true);
     }
 
     public OfficeProcess(File officeHome, UnoUrl unoUrl,
             File templateProfileDir, ProcessManager processManager,
-            boolean useGnuStyleLongOptions) {
+            boolean useGnuStyleLongOptions, boolean killExistingProcess) {
         this.officeHome = officeHome;
         this.unoUrl = unoUrl;
         this.templateProfileDir = templateProfileDir;
@@ -83,6 +81,7 @@ class OfficeProcess {
         } else {
             COMMAND_ARG_PREFIX = "-";
         }
+        this.killExistingProcess = killExistingProcess;
     }
 
     protected void determineOfficeVersion() throws IOException {
@@ -178,6 +177,17 @@ class OfficeProcess {
         String processRegex = "soffice.*"
                 + Pattern.quote(unoUrl.getAcceptString());
         String existingPid = processManager.findPid(processRegex);
+        if (existingPid != null && killExistingProcess) {
+            logger.warning(String.format("a process with acceptString '%s' is already running; pid %s", unoUrl.getAcceptString(), existingPid));
+            processManager.kill(null, existingPid);
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+            existingPid = processManager.findPid(processRegex);
+            
+        }
         if (existingPid != null) {
             throw new IllegalStateException(
                     String.format(
@@ -317,7 +327,7 @@ class OfficeProcess {
             fakeBundlesDir.mkdirs();
         }
     }
-
+    
     public void deleteFakeBundlesDir() {
         if (fakeBundlesDir != null) {
             try {

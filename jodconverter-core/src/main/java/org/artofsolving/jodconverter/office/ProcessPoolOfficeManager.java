@@ -44,13 +44,13 @@ class ProcessPoolOfficeManager implements OfficeManager {
             long taskExecutionTimeout, int maxTasksPerProcess,
             ProcessManager processManager) {
         this(officeHome, unoUrls, templateProfileDir, taskQueueTimeout,
-                taskExecutionTimeout, maxTasksPerProcess, processManager, false);
+                taskExecutionTimeout, maxTasksPerProcess, processManager, false, true);
     }
 
     public ProcessPoolOfficeManager(File officeHome, UnoUrl[] unoUrls,
             File templateProfileDir, long taskQueueTimeout,
             long taskExecutionTimeout, int maxTasksPerProcess,
-            ProcessManager processManager, boolean useGnuStyleLongOptions) {
+            ProcessManager processManager, boolean useGnuStyleLongOptions, boolean killExistingProcess) {
         this.taskQueueTimeout = taskQueueTimeout;
         pool = new ArrayBlockingQueue<PooledOfficeManager>(unoUrls.length);
         pooledManagers = new PooledOfficeManager[unoUrls.length];
@@ -63,6 +63,7 @@ class ProcessPoolOfficeManager implements OfficeManager {
             settings.setMaxTasksPerProcess(maxTasksPerProcess);
             settings.setProcessManager(processManager);
             settings.setUseGnuStyleLongOptions(useGnuStyleLongOptions);
+            settings.setKillExistingProcess(killExistingProcess);
             pooledManagers[i] = new PooledOfficeManager(settings);
         }
         logger.info("ProcessManager implementation is "

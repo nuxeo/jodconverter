@@ -1,6 +1,5 @@
 package org.artofsolving.jodconverter.office;
 
-import java.io.File;
 import java.util.logging.Logger;
 
 public class OfficeVersionDescriptor {

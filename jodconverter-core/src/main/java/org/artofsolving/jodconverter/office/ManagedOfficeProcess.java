@@ -47,7 +47,7 @@ class ManagedOfficeProcess {
         process = new OfficeProcess(settings.getOfficeHome(),
                 settings.getUnoUrl(), settings.getTemplateProfileDir(),
                 settings.getProcessManager(),
-                settings.isUseGnuStyleLongOptions());
+                settings.isUseGnuStyleLongOptions(), settings.isKillExistingProcess());
         connection = new OfficeConnection(settings.getUnoUrl());
     }
 

@@ -43,6 +43,8 @@ class ManagedOfficeProcessSettings {
     private long retryInterval = DEFAULT_RETRY_INTERVAL;
 
     protected boolean useGnuStyleLongOptions = false;
+    
+    private boolean killExistingProcess= true;
 
     public ManagedOfficeProcessSettings(UnoUrl unoUrl) {
         this.unoUrl = unoUrl;
@@ -99,5 +101,12 @@ class ManagedOfficeProcessSettings {
     public void setUseGnuStyleLongOptions(boolean useGnuStyleLongOptions) {
         this.useGnuStyleLongOptions = useGnuStyleLongOptions;
     }
-
+    
+    public void setKillExistingProcess(boolean killExistingProcess) {
+        this.killExistingProcess = killExistingProcess;
+    }
+      
+    public boolean isKillExistingProcess() {
+        return killExistingProcess;
+    }
 }
