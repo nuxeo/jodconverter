@@ -61,6 +61,18 @@ public class OfficeDocumentConverterFunctionalTest {
                         System.out.println("-- skipping odg to svg test... ");
                         continue;
                     }
+                    if (outputFormat.getExtension().equals("sxc")) {
+                      System.out.println("-- skipping * to sxc test... ");
+                      continue;
+                    }
+                    if (outputFormat.getExtension().equals("sxw")) {
+                      System.out.println("-- skipping * to sxw test... ");
+                      continue;
+                    }
+                    if (outputFormat.getExtension().equals("sxi")) {
+                      System.out.println("-- skipping * to sxi test... ");
+                      continue;
+                    }
                     File outputFile = File.createTempFile("test", "." + outputFormat.getExtension());
                     outputFile.deleteOnExit();
                     System.out.printf("-- converting %s to %s... ", inputFormat.getExtension(), outputFormat.getExtension());
