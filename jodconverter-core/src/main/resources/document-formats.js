@@ -187,5 +187,16 @@
     "extension": "svg",
     "mediaType": "image/svg+xml",
     "storePropertiesByFamily": {"DRAWING": {"FilterName": "draw_svg_Export"}}
+  },
+  {
+    "name": "Portable Network Graphics",
+    "extension": "png",
+    "mediaType": "image/png",
+    "storePropertiesByFamily": {
+      "DRAWING": {"FilterName": "draw_png_Export"},
+      "SPREADSHEET": {"FilterName": "calc_png_Export"},
+      "PRESENTATION": {"FilterName": "impress_png_Export"},
+      "TEXT": {"FilterName": "writer_png_Export"}
+    }
   }
 ]
