@@ -20,23 +20,19 @@
 package org.artofsolving.jodconverter.office;
 
 import java.io.File;
+import java.util.Properties;
 
-import org.artofsolving.jodconverter.process.MacProcessManager;
 import org.artofsolving.jodconverter.process.ProcessManager;
-import org.artofsolving.jodconverter.process.PureJavaProcessManager;
-import org.artofsolving.jodconverter.process.UnixProcessManager;
-import org.artofsolving.jodconverter.process.WindowsProcessManager;
-import org.artofsolving.jodconverter.util.PlatformUtils;
 
-public class DefaultOfficeManagerConfiguration {
+public class DefaultOfficeManagerConfiguration extends AbstractOfficeManagerConfiguration {
 
-    private File officeHome = OfficeUtils.getDefaultOfficeHome();
+    private File officeHome;
 
-    private OfficeConnectionProtocol connectionProtocol = OfficeConnectionProtocol.SOCKET;
+    private OfficeConnectionProtocol connectionProtocol;
 
-    private int[] portNumbers = new int[] { 2002 };
+    private int[] portNumbers;
 
-    private String[] pipeNames = new String[] { "office" };
+    private String[] pipeNames;
 
     private File templateProfileDir = null;
 
@@ -48,9 +44,18 @@ public class DefaultOfficeManagerConfiguration {
 
     private boolean useGnuStyleLongOptions;
 
-    private ProcessManager processManager = null; // lazily initialised
+    private ProcessManager processManager;
 
-    private boolean killExistingProcess = true; //
+    private Boolean killExistingProcess;
+
+    public DefaultOfficeManagerConfiguration() {
+        super();
+    }
+
+    @Override
+    public DefaultOfficeManagerConfiguration load(Properties properties, String prefix) {
+        return (DefaultOfficeManagerConfiguration) super.load(properties, prefix);
+    }
 
     public DefaultOfficeManagerConfiguration setOfficeHome(String officeHome) throws NullPointerException,
             IllegalArgumentException {
@@ -79,7 +84,7 @@ public class DefaultOfficeManagerConfiguration {
     }
 
     public DefaultOfficeManagerConfiguration setPortNumber(int portNumber) {
-        portNumbers = new int[] { portNumber };
+        portNumbers = new int[]{portNumber};
         return this;
     }
 
@@ -93,7 +98,7 @@ public class DefaultOfficeManagerConfiguration {
 
     public DefaultOfficeManagerConfiguration setPipeName(String pipeName) throws NullPointerException {
         checkArgumentNotNull("pipeName", pipeName);
-        pipeNames = new String[] { pipeName };
+        pipeNames = new String[]{pipeName};
         return this;
     }
 
@@ -137,6 +142,25 @@ public class DefaultOfficeManagerConfiguration {
     }
 
     public OfficeManager buildOfficeManager() throws IllegalStateException {
+        if (officeHome == null) {
+            officeHome = propertiesUtils.getOfficeHome();
+        }
+        if (connectionProtocol == null) {
+            connectionProtocol = propertiesUtils.getProtocol();
+        }
+        if (portNumbers == null) {
+            portNumbers = propertiesUtils.getPorts();
+        }
+        if (pipeNames == null) {
+            pipeNames = propertiesUtils.getPipeNames();
+        }
+        if (processManager == null) {
+            processManager = propertiesUtils.getProcessManager();
+        }
+        if (killExistingProcess == null) {
+            killExistingProcess = propertiesUtils.isProcessPreKill();
+        }
+
         if (!officeHome.isDirectory()) {
             throw new IllegalStateException("officeHome doesn't exist or is not a directory: " + officeHome);
         } else if (!OfficeUtils.getOfficeExecutable(officeHome).isFile()) {
@@ -145,10 +169,6 @@ public class DefaultOfficeManagerConfiguration {
         }
         if (templateProfileDir != null && !isValidProfileDir(templateProfileDir)) {
             throw new IllegalStateException("invalid templateProfileDir: " + templateProfileDir);
-        }
-
-        if (processManager == null) {
-            processManager = findBestProcessManager();
         }
 
         String forceOptionStyle = System.getProperty("jod.office.gnustyleoptions.force");
@@ -164,21 +184,6 @@ public class DefaultOfficeManagerConfiguration {
         }
         return new ProcessPoolOfficeManager(officeHome, unoUrls, templateProfileDir, taskQueueTimeout,
                 taskExecutionTimeout, maxTasksPerProcess, processManager, useGnuStyleLongOptions, killExistingProcess);
-    }
-
-    private ProcessManager findBestProcessManager() {
-        if (PlatformUtils.isLinux()) {
-            return new UnixProcessManager();
-        } else if (PlatformUtils.isMac()) {
-            return new MacProcessManager();
-        } else if (PlatformUtils.isWindows()) {
-            WindowsProcessManager windowsProcessManager = new WindowsProcessManager();
-            return windowsProcessManager.isUsable() ? windowsProcessManager : new PureJavaProcessManager();
-        } else {
-            // NOTE: UnixProcessManager can't be trusted to work on Solaris
-            // because of the 80-char limit on ps output there
-            return new PureJavaProcessManager();
-        }
     }
 
     private void checkArgumentNotNull(String argName, Object argValue) throws NullPointerException {

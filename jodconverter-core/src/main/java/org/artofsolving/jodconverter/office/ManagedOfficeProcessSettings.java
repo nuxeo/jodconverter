@@ -22,7 +22,7 @@ package org.artofsolving.jodconverter.office;
 import java.io.File;
 
 import org.artofsolving.jodconverter.process.ProcessManager;
-import org.artofsolving.jodconverter.process.PureJavaProcessManager;
+import org.artofsolving.jodconverter.util.PropertiesUtils;
 
 class ManagedOfficeProcessSettings {
 
@@ -32,11 +32,11 @@ class ManagedOfficeProcessSettings {
 
     private final UnoUrl unoUrl;
 
-    private File officeHome = OfficeUtils.getDefaultOfficeHome();
+    private File officeHome;
 
     private File templateProfileDir;
 
-    private ProcessManager processManager = new PureJavaProcessManager();
+    private ProcessManager processManager;
 
     private long retryTimeout = DEFAULT_RETRY_TIMEOUT;
 
@@ -44,10 +44,13 @@ class ManagedOfficeProcessSettings {
 
     protected boolean useGnuStyleLongOptions = false;
 
-    private boolean killExistingProcess = true;
+    private Boolean killExistingProcess;
+    
+    private final PropertiesUtils propertiesUtils;
 
     public ManagedOfficeProcessSettings(UnoUrl unoUrl) {
         this.unoUrl = unoUrl;
+        this.propertiesUtils = new PropertiesUtils();
     }
 
     public UnoUrl getUnoUrl() {
@@ -55,7 +58,7 @@ class ManagedOfficeProcessSettings {
     }
 
     public File getOfficeHome() {
-        return officeHome;
+        return officeHome != null ? officeHome : propertiesUtils.getOfficeHome();
     }
 
     public void setOfficeHome(File officeHome) {
@@ -71,7 +74,7 @@ class ManagedOfficeProcessSettings {
     }
 
     public ProcessManager getProcessManager() {
-        return processManager;
+        return processManager != null ? processManager : propertiesUtils.getProcessManager();
     }
 
     public void setProcessManager(ProcessManager processManager) {
@@ -107,6 +110,6 @@ class ManagedOfficeProcessSettings {
     }
 
     public boolean isKillExistingProcess() {
-        return killExistingProcess;
+        return killExistingProcess != null ? killExistingProcess : propertiesUtils.isProcessPreKill();
     }
 }

@@ -19,12 +19,23 @@
 //
 package org.artofsolving.jodconverter.office;
 
-public class ExternalOfficeManagerConfiguration {
+import java.util.Properties;
 
-    private OfficeConnectionProtocol connectionProtocol = OfficeConnectionProtocol.SOCKET;
-    private int portNumber = 2002;
-    private String pipeName = "office";
-    private boolean connectOnStart = true;
+public class ExternalOfficeManagerConfiguration extends AbstractOfficeManagerConfiguration {
+
+    private OfficeConnectionProtocol connectionProtocol;
+    private Integer portNumber;
+    private String pipeName;
+    private Boolean connectOnStart;
+
+    public ExternalOfficeManagerConfiguration() {
+        super();
+    }
+
+    @Override
+    public ExternalOfficeManagerConfiguration load(Properties properties, String prefix) {
+        return (ExternalOfficeManagerConfiguration) super.load(properties, prefix);
+    }
 
     public ExternalOfficeManagerConfiguration setConnectionProtocol(OfficeConnectionProtocol connectionProtocol) {
         this.connectionProtocol = connectionProtocol;
@@ -47,6 +58,10 @@ public class ExternalOfficeManagerConfiguration {
     }
 
     public OfficeManager buildOfficeManager() {
+        connectionProtocol = connectionProtocol != null ? connectionProtocol : propertiesUtils.getProtocol();
+        portNumber = portNumber != null ? portNumber : propertiesUtils.getPort();
+        pipeName = pipeName != null ? pipeName : propertiesUtils.getPipeName();
+        connectOnStart = connectOnStart != null ? connectOnStart : propertiesUtils.isConnectOnStart();
         UnoUrl unoUrl = connectionProtocol == OfficeConnectionProtocol.SOCKET ? UnoUrl.socket(portNumber) : UnoUrl.pipe(pipeName);
         return new ExternalOfficeManager(unoUrl, connectOnStart);
     }

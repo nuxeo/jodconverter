@@ -74,8 +74,8 @@ public class OfficeUtils {
     }
 
     /**
-     * Search for an (Open/Libre)Office install.
-     * If the System property "office.home" is defined, it takes precedence.
+     * Search for an (Open/Libre)Office install. If the System property
+     * "office.home" is defined, it takes precedence.
      *
      * @see PlatformUtils#findOfficeHome()
      *
@@ -90,8 +90,8 @@ public class OfficeUtils {
     }
 
     /**
-     * Search for an (Open/Libre)Office profile.
-     * If the System property "office.profile" is defined, it takes precedence.
+     * Search for an (Open/Libre)Office profile. If the System property
+     * "office.profile" is defined, it takes precedence.
      *
      * @see PlatformUtils#findOfficeProfileDir()
      *
@@ -118,4 +118,13 @@ public class OfficeUtils {
         }
     }
 
+    public static String getJPipePath(File officeHome) {
+        if (PlatformUtils.isMac()) {
+            return new File(officeHome, "MacOS/jpipe.so").getAbsolutePath();
+        } else if (PlatformUtils.isWindows()) {
+            return new File(officeHome, "program/jpipe.dll").getAbsolutePath();
+        } else {
+            return new File(officeHome, "program/jpipe.so").getAbsolutePath();
+        }
+    }
 }

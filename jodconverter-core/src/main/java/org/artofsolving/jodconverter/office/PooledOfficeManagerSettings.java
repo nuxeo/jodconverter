@@ -51,9 +51,9 @@ class PooledOfficeManagerSettings extends ManagedOfficeProcessSettings {
 
     @Override
     public String toString() {
-        StringBuffer sb = new StringBuffer();
-        sb.append("\ntaskExecutionTimeout :" + taskExecutionTimeout);
-        sb.append("\nmaxTasksPerProcess :" + maxTasksPerProcess);
+        StringBuilder sb = new StringBuilder();
+        sb.append("\ntaskExecutionTimeout :").append(taskExecutionTimeout);
+        sb.append("\nmaxTasksPerProcess :").append(maxTasksPerProcess);
         return sb.toString();
     }
 }
